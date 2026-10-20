@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% if mode == "add" %}
+    {% set heading = "Add student" %}
+    {% set submit_label = "Save student" %}
+{% elif mode == "edit" %}
+    {% set heading = "Edit student" %}
+    {% set submit_label = "Update student" %}
+{% else %}
+    {% set heading = "Student details" %}
+    {% set submit_label = "" %}
+{% endif %}
+
+{% block title %}{{ heading }} | Student Management System{% endblock %}
+
+{% block content %}
+<section class="panel form-panel">
+    <p class="eyebrow">{{ mode|capitalize }}</p>
+    <h1>{{ heading }}</h1>
+
+    {% if mode == "view" %}
+        <div class="details-grid">
+            <div>
+                <p class="detail-label">Full Name</p>
+                <p>{{ student.full_name }}</p>
+            </div>
+            <div>
+                <p class="detail-label">Roll Number</p>
+                <p>{{ student.roll_number }}</p>
+            </div>
+            <div>
+                <p class="detail-label">Email Address</p>
+                <p>{{ student.email }}</p>
+            </div>
+            <div>
+                <p class="detail-label">Course</p>
+                <p>{{ student.course }}</p>
+            </div>
+            <div>
+                <p class="detail-label">Year of Study</p>
+                <p>{{ student.year_of_study }}</p>
+            </div>
+        </div>
+        <div class="form-actions">
+            <a class="btn btn-primary" href="{{ url_for('edit_student', student_id=student.id) }}">Edit</a>
+            <a class="btn btn-ghost" href="{{ url_for('index') }}">Back to list</a>
+        </div>
+    {% else %}
+        <form method="post" novalidate>
+            <label for="full_name">Full Name</label>
+            <input id="full_name" name="full_name" type="text" value="{{ student.full_name }}" required maxlength="80">
+
+            <label for="roll_number">Roll Number</label>
+            <input id="roll_number" name="roll_number" type="text" value="{{ student.roll_number }}" required maxlength="20">
+
+            <label for="email">Email Address</label>
+            <input id="email" name="email" type="email" value="{{ student.email }}" required>
+
+            <label for="course">Course</label>
+            <input id="course" name="course" type="text" value="{{ student.course }}" required maxlength="60">
+
+            <label for="year_of_study">Year of Study</label>
+            <select id="year_of_study" name="year_of_study" required>
+                <option value="">Select year</option>
+                {% for year in years %}
+                    <option value="{{ year }}" {% if student.year_of_study == year %}selected{% endif %}>{{ year }}</option>
+                {% endfor %}
+            </select>
+
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">{{ submit_label }}</button>
+                <a class="btn btn-ghost" href="{{ url_for('index') }}">Cancel</a>
+            </div>
+        </form>
+    {% endif %}
+</section>
+{% endblock %}
