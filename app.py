@@ -340,3 +340,4 @@ with app.app_context():
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)
 
+print("Student Management System is running on http://localhost:5000")
