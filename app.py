@@ -7,13 +7,27 @@ import os
 import re
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, flash
+from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
+from flask import Response
 
 # The app object is the heart of Flask. Every route is attached to it.
 app = Flask(__name__)
 
+@app.route("/metrics")
+def metrics():
+    return Response(
+        generate_latest(),
+        mimetype=CONTENT_TYPE_LATEST
+    )
+
 # Flask needs a secret key to show flash messages (success/error banners).
 # This is fine for local learning. Do not use this value in a real public app.
 app.secret_key = "student-management-local-secret"
+
+students_added_total = Counter(
+    "students_added_total",
+    "Total number of students successfully added"
+)
 
 # Store the database file next to this Python file.
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -184,6 +198,7 @@ def add_student():
         )
         connection.commit()
         connection.close()
+        students_added_total.inc()
         flash("Student added successfully.", "success")
         return redirect(url_for("index"))
 
@@ -313,15 +328,3 @@ with app.app_context():
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)
 
-#354
-print("hdghksv")
-print("dfdgdgw")
-print("dfgdfgdfg")
-
-print("dfgdfgdfg")
-
-print("dfdgdgw")
-print("dfgdfgdfg")
-
-print("dfdgdgw")
-print("dfgdfgdfg")
