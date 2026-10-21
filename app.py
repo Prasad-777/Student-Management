@@ -323,14 +323,5 @@ print("dfgdfgdfg")
 print("dfdgdgw")
 print("dfgdfgdfg")
 
-print("dfgdfgdfg")
-
 print("dfdgdgw")
-print("dfgdfgdfg")
-
-print("dfgdfgdfg")
-
-print("dfdgdgw")
-print("dfgdfgdfg")
-
 print("dfgdfgdfg")
