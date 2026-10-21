@@ -7,14 +7,21 @@ import os
 import re
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, flash
-from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
+from prometheus_client import Counter, Gauge, generate_latest, CONTENT_TYPE_LATEST
 from flask import Response
-
 # The app object is the heart of Flask. Every route is attached to it.
 app = Flask(__name__)
 
 @app.route("/metrics")
 def metrics():
+    connection = get_db_connection()
+    total_students = connection.execute(
+        "SELECT COUNT(*) FROM students"
+    ).fetchone()[0]
+    connection.close()
+
+    total_students_gauge.set(total_students)
+
     return Response(
         generate_latest(),
         mimetype=CONTENT_TYPE_LATEST
@@ -27,6 +34,11 @@ app.secret_key = "student-management-local-secret"
 students_added_total = Counter(
     "students_added_total",
     "Total number of students successfully added"
+)
+
+total_students_gauge = Gauge(
+    "students_current_total",
+    "Current number of students in the database"
 )
 
 # Store the database file next to this Python file.
